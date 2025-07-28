@@ -1,0 +1,60 @@
+name: Test Build
+
+on:
+  push:
+    branches: [ "develop" ]
+  pull_request:
+    branches: [ "develop" ]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run linting
+      run: npm run lint --if-present
+
+    - name: Build application
+      run: npm run build
+      env:
+        VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+        VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        VITE_OPENROUTER_API_KEY: ${{ secrets.VITE_OPENROUTER_API_KEY }}
+
+    - name: Test Docker build
+      run: |
+        docker build -f Dockerfile.prod \
+          --build-arg VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }} \
+          --build-arg VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }} \
+          --build-arg VITE_OPENROUTER_API_KEY=${{ secrets.VITE_OPENROUTER_API_KEY }} \
+          -t knowlegather:test \
+          .
+
+    - name: Test container
+      run: |
+        # Start container
+        docker run -d -p 8080:80 --name test-container knowlegather:test
+        
+        # Wait for container to be ready
+        sleep 30
+        
+        # Test if container responds
+        curl -f http://localhost:8080 || exit 1
+        
+        # Cleanup
+        docker stop test-container
+        docker rm test-container
+        
+        echo "✅ Docker build and container test successful!"
