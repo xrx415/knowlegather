@@ -1,0 +1,45 @@
+# =============================================================================
+# PROSTY CADDYFILE DLA PRODUKCJI - BEZ SSL
+# =============================================================================
+
+:80 {
+    # Root folder z zbudowaną aplikacją
+    root * /usr/share/caddy
+    
+    # Kompresja dla lepszej wydajności
+    encode gzip zstd
+    
+    # Podstawowe nagłówki bezpieczeństwa
+    header {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        X-XSS-Protection "1; mode=block"
+        
+        # Cache dla statycznych plików
+        Cache-Control "public, max-age=31536000" {
+            path_regexp \.(js|css|woff2?|png|jpe?g|svg|ico)$
+        }
+        
+        # Krótszy cache dla HTML
+        Cache-Control "public, max-age=3600" {
+            path_regexp \.html$
+        }
+    }
+    
+    # Serwowanie plików statycznych
+    file_server
+    
+    # SPA routing - wszystkie nieistniejące pliki przekieruj do index.html
+    try_files {path} /index.html
+    
+    # Health check endpoint
+    handle /health {
+        respond "OK" 200
+    }
+    
+    # Podstawowe logowanie
+    log {
+        output stdout
+        format console
+    }
+} 

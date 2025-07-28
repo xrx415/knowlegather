@@ -1,0 +1,17 @@
+{
+    # Włączamy kompresję gzip i zstd dla lepszej wydajności
+    encode gzip zstd
+}
+
+:80 {
+    # Ustawiamy główny folder, z którego serwowane są pliki
+    root * /usr/share/caddy
+
+    # Włączamy serwer plików
+    file_server
+
+    # Kluczowe dla aplikacji SPA (React, Vue, Angular, etc.)
+    # Jeśli plik nie zostanie znaleziony, serwuj /index.html
+    # To pozwala na działanie routingu po stronie klienta.
+    try_files {path} /index.html
+}

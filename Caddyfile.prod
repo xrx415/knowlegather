@@ -1,0 +1,107 @@
+# =============================================================================
+# KONFIGURACJA GLOBALNA CADDY
+# =============================================================================
+{
+    # Kompresja dla lepszej wydajności
+    encode {
+        gzip 6
+        zstd
+        minimum_length 512
+        match {
+            header Content-Type text/*
+            header Content-Type application/javascript*
+            header Content-Type application/json*
+        }
+    }
+    
+    # Bezpieczeństwo
+    servers {
+        protocols h1 h2 h3
+    }
+    
+    # Automatyczne HTTPS
+    auto_https on
+    
+    # Email dla Let's Encrypt (zmień na swój)
+    email admin@your-domain.com
+}
+
+# =============================================================================
+# KONFIGURACJA SERWERA
+# =============================================================================
+:80, your-domain.com {
+    # Root folder z zbudowaną aplikacją
+    root * /usr/share/caddy
+    
+    # Nagłówki bezpieczeństwa
+    header {
+        # HSTS
+        Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        
+        # XSS Protection
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        X-XSS-Protection "1; mode=block"
+        
+        # Content Security Policy (dostosuj do swoich potrzeb)
+        Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; media-src 'self'; object-src 'none'; frame-src 'none';"
+        
+        # Inne nagłówki bezpieczeństwa
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "geolocation=(), microphone=(), camera=()"
+        
+        # Cache control dla statycznych zasobów
+        Cache-Control "public, max-age=31536000, immutable" {
+            path *.js *.css *.woff2 *.woff *.ttf *.ico *.png *.jpg *.jpeg *.svg
+        }
+        
+        # Cache dla HTML (krócej)
+        Cache-Control "public, max-age=3600, must-revalidate" {
+            path *.html
+        }
+        
+        # Wyłączenie cache dla API
+        Cache-Control "no-cache, no-store, must-revalidate" {
+            path /api/*
+        }
+    }
+    
+    # Obsługa plików statycznych
+    file_server {
+        precompressed gzip br
+    }
+    
+    # SPA routing - przekierowanie wszystkich nieistniejących plików do index.html
+    try_files {path} /index.html
+    
+    # Obsługa błędów
+    handle_errors {
+        @404 {
+            expression {http.error.status_code} == 404
+        }
+        rewrite @404 /index.html
+        file_server
+    }
+    
+    # Logowanie (opcjonalne - wyłącz w produkcji jeśli nie potrzebujesz)
+    log {
+        output file /var/log/caddy/access.log {
+            roll_size 100MB
+            roll_keep 5
+            roll_keep_for 30d
+        }
+        format json
+    }
+    
+    # Health check endpoint
+    handle /health {
+        respond "OK" 200
+    }
+    
+    # Metrics endpoint (opcjonalne)
+    handle /metrics {
+        respond "Metrics endpoint" 200 {
+            close
+        }
+    }
+} 
