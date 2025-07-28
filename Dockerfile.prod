@@ -21,6 +21,16 @@ COPY package*.json ./
 RUN npm ci --frozen-lockfile && \
     npm cache clean --force
 
+# Build arguments dla zmiennych środowiskowych
+ARG VITE_SUPABASE_URL
+ARG VITE_SUPABASE_ANON_KEY
+ARG VITE_OPENROUTER_API_KEY
+
+# Ustawienie zmiennych środowiskowych dla buildu
+ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
+ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
+ENV VITE_OPENROUTER_API_KEY=$VITE_OPENROUTER_API_KEY
+
 # Kopiowanie kodu źródłowego
 COPY . .
 
