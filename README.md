@@ -11,8 +11,8 @@ Aplikacja do gromadzenia i organizowania wiedzy.
 
 1. Sklonuj repozytorium:
 ```bash
-git clone https://github.com/TWOJA-NAZWA-UZYTKOWNIKA/knowlegathor.git
-cd knowlegathor
+git clone https://github.com/xrx415/knowlegather.git
+cd knowlegather
 ```
 
 2. Zainstaluj zależności:
@@ -42,16 +42,12 @@ npm run dev
 
 MIT
 
-
-
-
 ### Useful commands
 
 ```bash
 docker-compose down && npx supabase stop && npx supabase start && docker-compose up
 npx supabase start && docker-compose up
 ```
-
 
 ### Usefull Links:
 http://localhost:54327/dashboard - LOGFLARE jakiś fajny system do logów
