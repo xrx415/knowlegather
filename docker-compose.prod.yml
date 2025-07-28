@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # =============================================================================
+  # APLIKACJA GŁÓWNA - Knowlegathor
+  # =============================================================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        - NODE_ENV=production
+    image: knowlegather:latest
+    container_name: knowlegather-app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      # Zmienne środowiskowe dla produkcji
+      - NODE_ENV=production
+      - VITE_SUPABASE_URL=${VITE_SUPABASE_URL}
+      - VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
+      - VITE_OPENROUTER_API_KEY=${VITE_OPENROUTER_API_KEY}
+    volumes:
+      # Montowanie prostej konfiguracji Caddy
+      - ./Caddyfile.simple:/etc/caddy/Caddyfile:ro
+    networks:
+      - knowlegather-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    # Bez Traefik - Caddy obsługuje wszystko sam
+
+# =============================================================================
+# WOLUMENY
+# =============================================================================
+# Brak dodatkowych wolumenów - wszystko w kontenerze
+
+# =============================================================================
+# SIECI
+# =============================================================================
+networks:
+  knowlegather-network:
+    driver: bridge
+    name: knowlegather-net 

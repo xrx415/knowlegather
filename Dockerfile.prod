@@ -1,0 +1,71 @@
+# =============================================================================
+# ETAP 1: BUILD - Budowanie aplikacji
+# =============================================================================
+FROM node:20-alpine AS builder
+
+# Metadane
+LABEL maintainer="knowlegather-team"
+LABEL description="Knowlegather - Production Build Stage"
+
+# Instalacja dodatkowych narzędzi dla alpine
+RUN apk add --no-cache libc6-compat
+
+# Ustawienie katalogu roboczego
+WORKDIR /app
+
+# Kopiowanie plików package.json i package-lock.json
+# (kopiujemy osobno dla lepszego cache'owania warstw)
+COPY package*.json ./
+
+# Instalacja wszystkich zależności (potrzebne do budowania)
+RUN npm ci --frozen-lockfile && \
+    npm cache clean --force
+
+# Kopiowanie kodu źródłowego
+COPY . .
+
+# Budowanie aplikacji dla produkcji
+RUN npm run build
+
+# =============================================================================
+# ETAP 2: RUNTIME - Serwowanie aplikacji z Caddy
+# =============================================================================
+FROM caddy:2.7-alpine AS runtime
+
+# Metadane
+LABEL maintainer="knowlegather-team"
+LABEL description="Knowlegather - Production Runtime"
+LABEL version="1.0.0"
+
+# Instalacja dodatków bezpieczeństwa
+RUN apk add --no-cache \
+    ca-certificates \
+    tzdata && \
+    update-ca-certificates
+
+# Utworzenie użytkownika non-root dla bezpieczeństwa
+RUN addgroup -g 1001 -S caddy && \
+    adduser -S caddy -u 1001 -G caddy
+
+# Kopiowanie zbudowanej aplikacji z etapu builder
+COPY --from=builder /app/dist /usr/share/caddy
+
+# Kopiowanie prostej konfiguracji Caddy
+COPY --from=builder /app/Caddyfile.simple /etc/caddy/Caddyfile
+
+# Ustawienie uprawnień
+RUN chown -R caddy:caddy /usr/share/caddy && \
+    chown caddy:caddy /etc/caddy/Caddyfile
+
+# Przełączenie na użytkownika non-root
+USER caddy
+
+# Ekspozycja portu HTTP
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
+
+# Uruchomienie serwera Caddy
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"] 
