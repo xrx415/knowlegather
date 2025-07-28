@@ -26,6 +26,13 @@ jobs:
     - name: Run linting (disabled temporarily)
       run: echo "Linting disabled for now - will fix in future PR"
 
+    - name: Run tests
+      run: npm run test:ci
+      env:
+        VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+        VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        VITE_OPENROUTER_API_KEY: ${{ secrets.VITE_OPENROUTER_API_KEY }}
+
     - name: Build application
       run: npm run build
       env:
