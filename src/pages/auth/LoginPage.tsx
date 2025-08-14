@@ -17,48 +17,24 @@ const LoginPage = () => {
     setError('');
     setIsLoading(true);
     
-    console.log('🔐 Rozpoczynam proces logowania...');
-    console.log('📧 Email:', email);
-    console.log('🔑 Hasło:', password ? '***' : 'brak');
-    console.log('🌐 Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
-    console.log('🔑 Supabase Key:', import.meta.env.VITE_SUPABASE_ANON_KEY ? '***' : 'brak');
-    
     try {
-      console.log('🔄 Wywołuję supabase.auth.signInWithPassword...');
-      
       const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       
-      console.log('📡 Odpowiedź z Supabase:', { error, data });
-      
       if (error) {
-        console.error('❌ Błąd logowania:', error);
         throw error;
       }
       
-      console.log('✅ Logowanie udane!');
-      console.log('👤 Użytkownik:', data.user);
-      console.log('🔑 Sesja:', data.session);
-      
       navigate('/collections');
     } catch (err: any) {
-      console.error('💥 Błąd podczas logowania:', err);
-      console.error('📝 Szczegóły błędu:', {
-        message: err.message,
-        status: err.status,
-        name: err.name,
-        stack: err.stack
-      });
-      
       if (err.message === 'Invalid login credentials') {
         setError('Nieprawidłowy email lub hasło. Sprawdź poprawność danych i spróbuj ponownie.');
       } else {
         setError(`Wystąpił błąd podczas logowania: ${err.message}`);
       }
     } finally {
-      console.log('🏁 Kończę proces logowania');
       setIsLoading(false);
     }
   };

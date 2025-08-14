@@ -47,7 +47,6 @@ const AddResourceModal = ({ isOpen, onClose, collectionId, initialTab = 'url' }:
         setTags(suggestedTags.join(', '));
       }
     } catch (err) {
-      console.error('Error suggesting tags:', err);
       // Don't show error to user - tag suggestion is optional
     }
   };

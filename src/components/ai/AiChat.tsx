@@ -177,7 +177,6 @@ const AiChat = ({ collection, currentResource }: AiChatProps) => {
       
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error: any) {
-      console.error('Error sending message to AI:', error);
       setError(error.message || 'Przepraszamy, wystąpił błąd podczas komunikacji z AI. Proszę spróbować ponownie.');
     } finally {
       setIsLoading(false);
