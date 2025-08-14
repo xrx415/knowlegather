@@ -24,7 +24,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Handle auth state changes
     const handleAuthChange = async (event: string, session: any) => {
       try {
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
@@ -48,10 +47,8 @@ function App() {
       }
     };
 
-    // Set up auth listener
     const { data: authListener } = supabase.auth.onAuthStateChange(handleAuthChange);
 
-    // Initial session check
     const initializeAuth = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
@@ -74,7 +71,6 @@ function App() {
 
     initializeAuth();
 
-    // Cleanup
     return () => {
       authListener?.subscription.unsubscribe();
     };
