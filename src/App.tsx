@@ -24,28 +24,17 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('🚀 Inicjalizacja aplikacji...');
-    console.log('👤 Aktualny użytkownik:', user);
-    
     // Handle auth state changes
     const handleAuthChange = async (event: string, session: any) => {
-      console.log('🔄 Zmiana stanu autoryzacji:', event);
-      console.log('📦 Sesja:', session);
-      
       try {
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           if (session?.user) {
-            console.log('✅ Użytkownik zalogowany:', session.user);
             setUser(session.user);
           }
         } else if (event === 'SIGNED_OUT') {
-          console.log('🚪 Użytkownik wylogowany');
           clearUser();
-          // Clear any local storage or state that might contain stale tokens
           localStorage.removeItem('supabase.auth.token');
         } else if (event === 'USER_DELETED' || event === 'USER_UPDATED') {
-          console.log('👤 Użytkownik zaktualizowany/usunięty:', event);
-          // Handle user deletion or updates
           if (session?.user) {
             setUser(session.user);
           } else {
@@ -53,8 +42,6 @@ function App() {
           }
         }
       } catch (error) {
-        console.error('❌ Błąd zmiany stanu autoryzacji:', error);
-        // If there's an auth error, clear the user state to force re-authentication
         clearUser();
       } finally {
         setIsLoading(false);
@@ -62,32 +49,23 @@ function App() {
     };
 
     // Set up auth listener
-    console.log('👂 Ustawiam listener autoryzacji...');
     const { data: authListener } = supabase.auth.onAuthStateChange(handleAuthChange);
 
     // Initial session check
     const initializeAuth = async () => {
-      console.log('🔍 Sprawdzam początkową sesję...');
-      
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
         
-        console.log('📡 Odpowiedź getSession:', { session, error });
-        
         if (error) {
-          console.error('❌ Błąd getSession:', error);
           throw error;
         }
 
         if (session?.user) {
-          console.log('✅ Znaleziono sesję:', session.user);
           setUser(session.user);
         } else {
-          console.log('❌ Brak sesji');
           clearUser();
         }
       } catch (error) {
-        console.error('❌ Błąd sprawdzania sesji:', error);
         clearUser();
       } finally {
         setIsLoading(false);
@@ -98,12 +76,9 @@ function App() {
 
     // Cleanup
     return () => {
-      console.log('🧹 Czyszczenie listenera autoryzacji...');
       authListener?.subscription.unsubscribe();
     };
   }, [setUser, clearUser]);
-
-  console.log('🎯 Render App - isLoading:', isLoading, 'user:', user);
 
   if (isLoading) {
     return <LoadingScreen />;

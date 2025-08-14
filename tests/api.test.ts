@@ -6,8 +6,25 @@
 const SUPABASE_URL = "https://fyebojtynxasphohnrjh.supabase.co";
 
 describe('Supabase Edge Functions Tests', () => {
+  beforeEach(() => {
+    // Reset fetch mock before each test
+    (global.fetch as jest.Mock).mockClear();
+  });
   
   test('AI Chat function responds', async () => {
+    const mockResponse = {
+      message: {
+        content: 'Hello! How can I help you today?',
+        role: 'assistant'
+      }
+    };
+    
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      status: 200,
+      ok: true,
+      json: () => Promise.resolve(mockResponse)
+    });
+
     const response = await fetch(`${SUPABASE_URL}/functions/v1/ai-chat`, {
       method: 'POST',
       headers: {
