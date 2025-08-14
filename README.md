@@ -44,9 +44,14 @@ MIT
 
 ### Useful commands
 
+#### Run Local Build Vite + Supabase
+```bash
+npx supabase start && docker-compose up
+```
+
+#### Full Restart Command
 ```bash
 docker-compose down && npx supabase stop && npx supabase start && docker-compose up
-npx supabase start && docker-compose up
 ```
 
 ### Usefull Links:
