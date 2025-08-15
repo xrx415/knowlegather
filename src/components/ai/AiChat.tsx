@@ -176,8 +176,9 @@ const AiChat = ({ collection, currentResource }: AiChatProps) => {
       };
       
       setMessages((prev) => [...prev, assistantMessage]);
-    } catch (error: any) {
-      setError(error.message || 'Przepraszamy, wystąpił błąd podczas komunikacji z AI. Proszę spróbować ponownie.');
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Przepraszamy, wystąpił błąd podczas komunikacji z AI. Proszę spróbować ponownie.';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -207,13 +208,13 @@ const AiChat = ({ collection, currentResource }: AiChatProps) => {
   return (
     <div 
       ref={chatRef}
-      className={`fixed bg-white border border-gray-200 rounded-lg shadow-lg transition-all duration-300 z-40`}
+      className={`fixed bg-white border border-gray-200 rounded-lg shadow-lg transition-all duration-300 z-40 w-96 ${
+        isDragging ? 'cursor-grabbing' : 'cursor-auto'
+      }`}
       style={{
-        width: '384px',
         left: `${position.x}px`,
         top: isExpanded ? `${position.y - 384 + 48}px` : `${position.y}px`,
-        height: isExpanded ? '384px' : '48px',
-        cursor: isDragging ? 'grabbing' : 'auto'
+        height: isExpanded ? '384px' : '48px'
       }}
     >
       {/* Header */}
@@ -319,7 +320,9 @@ const AiChat = ({ collection, currentResource }: AiChatProps) => {
                 isLoading={isLoading}
                 icon={<Send size={16} />}
                 aria-label="Send message"
-              />
+              >
+                Wyślij
+              </Button>
             </div>
           </div>
         </div>
@@ -328,4 +331,4 @@ const AiChat = ({ collection, currentResource }: AiChatProps) => {
   );
 };
 
-export default AiChat;
+export default AiChat; 

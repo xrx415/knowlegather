@@ -85,6 +85,8 @@ const CreateCollectionModal = ({ isOpen, onClose }: CreateCollectionModalProps) 
               onClose();
             }}
             className="text-gray-400 hover:text-gray-500 focus:outline-none"
+            aria-label="Zamknij modal"
+            title="Zamknij modal"
           >
             <X size={20} />
           </button>

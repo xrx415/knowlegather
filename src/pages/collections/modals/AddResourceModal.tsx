@@ -206,6 +206,8 @@ const AddResourceModal = ({ isOpen, onClose, collectionId, initialTab = 'url' }:
               onClose();
             }}
             className="text-gray-400 hover:text-gray-500 focus:outline-none"
+            aria-label="Zamknij modal"
+            title="Zamknij modal"
           >
             <X size={20} />
           </button>
@@ -314,6 +316,8 @@ const AddResourceModal = ({ isOpen, onClose, collectionId, initialTab = 'url' }:
                       file:text-sm file:font-medium
                       file:bg-primary-50 file:text-primary-700
                       hover:file:bg-primary-100"
+                    aria-label="Wybierz plik tekstowy"
+                    title="Wybierz plik tekstowy"
                   />
                   <p className="mt-1 text-xs text-gray-500">
                     Dozwolone formaty: .txt, .md lub pliki tekstowe

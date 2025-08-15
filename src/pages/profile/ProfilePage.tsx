@@ -76,36 +76,41 @@ const ProfilePage = () => {
         
         <div className="mt-4">
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Adres email
             </label>
             <div className="flex">
               <input
+                id="email"
                 type="email"
                 value={email}
                 disabled
                 className="flex-1 h-10 rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-500"
+                aria-label="Adres email użytkownika"
               />
             </div>
           </div>
           
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="userId" className="block text-sm font-medium text-gray-700 mb-1">
               ID użytkownika
             </label>
             <input
+              id="userId"
               type="text"
               value={user?.id || ''}
               disabled
               className="w-full h-10 rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-500"
+              aria-label="ID użytkownika"
             />
           </div>
           
           <div className="mb-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="registrationDate" className="block text-sm font-medium text-gray-700 mb-1">
               Data rejestracji
             </label>
             <input
+              id="registrationDate"
               type="text"
               value={user?.created_at ? new Date(user.created_at).toLocaleDateString('pl-PL', {
                 year: 'numeric',
@@ -116,6 +121,7 @@ const ProfilePage = () => {
               }) : ''}
               disabled
               className="w-full h-10 rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-500"
+              aria-label="Data rejestracji użytkownika"
             />
           </div>
         </div>
