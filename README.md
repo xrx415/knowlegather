@@ -38,10 +38,6 @@ npm run dev
 - TailwindCSS
 - TypeScript
 
-## Licencja
-
-MIT
-
 ### Useful commands
 
 #### Run Local Build Vite + Supabase
@@ -49,10 +45,10 @@ MIT
 npx supabase start && docker-compose up
 ```
 
-#### Full Restart Command
+#### Full Restart Command (for local development)
 ```bash
 docker-compose down && npx supabase stop && npx supabase start && docker-compose up
 ```
 
 ### Usefull Links:
-http://localhost:54327/dashboard - LOGFLARE jakiś fajny system do logów
+http://localhost:54327/dashboard
