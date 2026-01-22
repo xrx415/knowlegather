@@ -12,7 +12,11 @@
   "dependencies": {
     "@google/genai": "^1.11.0",
     "@google/generative-ai": "^0.24.1",
+    "@mdx-js/mdx": "^3.1.1",
+    "@mdx-js/react": "^3.1.1",
+    "@mdx-js/rollup": "^3.1.1",
     "@supabase/supabase-js": "^2.39.0",
+    "@types/mdx": "^2.0.13",
     "axios": "^1.6.2",
     "classnames": "^2.5.1",
     "lucide-react": "^0.344.0",

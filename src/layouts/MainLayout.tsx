@@ -12,7 +12,7 @@ const MainLayout = () => {
     {
       name: 'Strona główna',
       icon: Home,
-      href: '/',
+      href: '/?stay=true',
     },
     {
       name: 'Kolekcje',
@@ -48,8 +48,10 @@ const MainLayout = () => {
             <nav className="space-y-1">
               {navigationItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = location.pathname === item.href || 
-                  (item.href !== '/' && location.pathname.startsWith(item.href));
+                const isHomepage = item.href.startsWith('/');
+                const isActive = isHomepage 
+                  ? location.pathname === '/' 
+                  : location.pathname === item.href || location.pathname.startsWith(item.href);
                 
                 return (
                   <Link

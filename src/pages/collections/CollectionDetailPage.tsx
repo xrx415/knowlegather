@@ -29,6 +29,7 @@ import AddResourceModal from './modals/AddResourceModal';
 import EditCollectionModal from './modals/EditCollectionModal';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import ResourceViewer from '../resources/ResourceViewer';
+import ResourceViewerMDX from '../resources/ResourceViewerMDX';
 
 const CollectionDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -56,6 +57,7 @@ const CollectionDetailPage = () => {
   const [initialResourceTab, setInitialResourceTab] = useState<'url' | 'note' | 'file'>('url');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [useMDX, setUseMDX] = useState(false);
   
   // Load collection and resources
   useEffect(() => {
@@ -188,6 +190,17 @@ const CollectionDetailPage = () => {
         </div>
         
         <div className="mt-4 sm:mt-0 flex flex-wrap gap-2">
+          <button
+            onClick={() => setUseMDX(!useMDX)}
+            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+              useMDX 
+                ? 'bg-primary-600 text-white' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+            title="Przełącz renderer markdown"
+          >
+            {useMDX ? '⚡ MDX' : '📝 Markdown'}
+          </button>
           <Button
             variant="outline"
             size="sm"
@@ -273,10 +286,17 @@ const CollectionDetailPage = () => {
         
         {/* Main content area - resource viewer */}
         <div className="flex-1 overflow-hidden flex flex-col">
-          <ResourceViewer 
-            resource={currentResource} 
-            onAddResource={() => handleAddResource('url')}
-          />
+          {useMDX ? (
+            <ResourceViewerMDX 
+              resource={currentResource} 
+              onAddResource={() => handleAddResource('url')}
+            />
+          ) : (
+            <ResourceViewer 
+              resource={currentResource} 
+              onAddResource={() => handleAddResource('url')}
+            />
+          )}
         </div>
       </div>
       

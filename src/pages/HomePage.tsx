@@ -1,19 +1,24 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { BookOpen, FileText, BrainCircuit, Tags } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import Button from '../components/ui/Button';
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useAuthStore();
   
   useEffect(() => {
-    // If user is logged in, redirect to collections page
-    if (user) {
+    // Only redirect if user didn't intentionally navigate to homepage
+    // Check if there's a 'stay' parameter or if user came from navigation
+    const searchParams = new URLSearchParams(location.search);
+    const shouldStay = searchParams.get('stay') === 'true';
+    
+    if (user && !shouldStay) {
       navigate('/collections');
     }
-  }, [user, navigate]);
+  }, [user, navigate, location.search]);
   
   return (
     <div className="min-h-[calc(100vh-4rem)] flex flex-col">
