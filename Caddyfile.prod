@@ -23,7 +23,7 @@
     auto_https on
     
     # Email dla Let's Encrypt (zmień na swój)
-    email admin@your-domain.com
+    email admin@knowlegather.com
 }
 
 # =============================================================================

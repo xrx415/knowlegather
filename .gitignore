@@ -27,3 +27,11 @@ dist-ssr
 # Private development files and notes
 _bin/
 _bin
+_tmp
+tmp
+
+# Supabase CLI binaries
+supabase.exe
+supabase_cli.tar.gz
+*.exe
+*.tar.gz
