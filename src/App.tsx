@@ -14,6 +14,7 @@ import RegisterPage from './pages/auth/RegisterPage';
 import CollectionsPage from './pages/collections/CollectionsPage';
 import CollectionDetailPage from './pages/collections/CollectionDetailPage';
 import ProfilePage from './pages/profile/ProfilePage';
+import DominiChatPage from './pages/DominiChatPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Components
@@ -52,7 +53,7 @@ function App() {
     const initializeAuth = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
-        
+
         if (error) {
           throw error;
         }
@@ -91,17 +92,21 @@ function App() {
       {/* Protected routes */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
-        <Route 
-          path="/collections" 
-          element={user ? <CollectionsPage /> : <Navigate to="/login" replace />} 
+        <Route
+          path="/collections"
+          element={user ? <CollectionsPage /> : <Navigate to="/login" replace />}
         />
-        <Route 
-          path="/collections/:id" 
-          element={user ? <CollectionDetailPage /> : <Navigate to="/login" replace />} 
+        <Route
+          path="/collections/:id"
+          element={user ? <CollectionDetailPage /> : <Navigate to="/login" replace />}
         />
-        <Route 
-          path="/profile" 
-          element={user ? <ProfilePage /> : <Navigate to="/login" replace />} 
+        <Route
+          path="/profile"
+          element={user ? <ProfilePage /> : <Navigate to="/login" replace />}
+        />
+        <Route
+          path="/chat"
+          element={user ? <DominiChatPage /> : <Navigate to="/login" replace />}
         />
       </Route>
 
