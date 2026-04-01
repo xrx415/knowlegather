@@ -2,7 +2,7 @@ import { Persona } from '../types';
 
 const ferdynand: Persona = {
     id: 'default-3',
-    firstName: 'Ferdynand2',
+    firstName: 'Ferdynand',
     lastName: 'Kiepski',
     interests: [
         'Picie piwa',
