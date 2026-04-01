@@ -41,6 +41,7 @@ jobs:
           --build-arg VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }} \
           --build-arg VITE_SUPABASE_ANON_KEY=${{ secrets.VITE_SUPABASE_ANON_KEY }} \
           --build-arg VITE_OPENROUTER_API_KEY=${{ secrets.VITE_OPENROUTER_API_KEY }} \
+          --build-arg VITE_GEMINI_API_KEY=${{ secrets.VITE_GEMINI_API_KEY }} \
           -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
           -t gcr.io/$PROJECT_ID/$SERVICE_NAME:latest \
           .
