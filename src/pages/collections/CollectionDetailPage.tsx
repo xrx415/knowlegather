@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  ChevronLeft, 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Globe, 
-  FileText, 
+import {
+  ChevronLeft,
+  Plus,
+  Edit,
+  Trash2,
+  Globe,
+  FileText,
   FileCode,
   Upload,
   Download,
@@ -17,8 +18,8 @@ import {
 import { useAuthStore } from '../../stores/authStore';
 import { useCollectionsStore } from '../../stores/collectionsStore';
 import { useResourcesStore, Resource } from '../../stores/resourcesStore';
-import { 
-  fetchCollectionById, 
+import {
+  fetchCollectionById,
   fetchResourcesByCollectionId,
   deleteCollection
 } from '../../lib/supabase';
@@ -30,6 +31,7 @@ import EditCollectionModal from './modals/EditCollectionModal';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
 import ResourceViewer from '../resources/ResourceViewer';
 import ResourceViewerMDX from '../resources/ResourceViewerMDX';
+import { useSidebarPortal } from '../../contexts/SidebarPortalContext';
 
 const CollectionDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -58,6 +60,7 @@ const CollectionDetailPage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [useMDX, setUseMDX] = useState(false);
+  const sidebarSlot = useSidebarPortal();
   
   // Load collection and resources
   useEffect(() => {
@@ -220,12 +223,11 @@ const CollectionDetailPage = () => {
         </div>
       </div>
       
-      {/* Main content area - split view */}
-      <div className="flex-1 overflow-hidden flex border border-gray-200 rounded-lg shadow-sm">
-        {/* Left sidebar - resources list */}
-        <div className="w-64 border-r border-gray-200 bg-gray-50 flex flex-col">
-          <div className="p-3 border-b border-gray-200 bg-white flex justify-between items-center">
-            <h2 className="font-medium text-gray-900">Zasoby</h2>
+      {/* Resources sidebar — rendered into unified sidebar via portal */}
+      {sidebarSlot && createPortal(
+        <div className="flex flex-col h-full border-t border-gray-200 bg-gray-50">
+          <div className="p-3 border-b border-gray-200 bg-white flex justify-between items-center shrink-0">
+            <h2 className="font-medium text-sm text-gray-900">Zasoby</h2>
             <div className="flex">
               <Button
                 variant="ghost"
@@ -245,7 +247,6 @@ const CollectionDetailPage = () => {
               />
             </div>
           </div>
-          
           <div className="flex-1 overflow-y-auto p-2">
             {resourcesLoading ? (
               <div className="text-center py-6">
@@ -258,9 +259,7 @@ const CollectionDetailPage = () => {
               </div>
             ) : resources.length === 0 ? (
               <div className="p-3 text-center">
-                <p className="text-sm text-gray-500">
-                  Brak zasobów w tej kolekcji
-                </p>
+                <p className="text-sm text-gray-500">Brak zasobów w tej kolekcji</p>
                 <Button
                   variant="outline"
                   size="sm"
@@ -282,22 +281,23 @@ const CollectionDetailPage = () => {
               ))
             )}
           </div>
-        </div>
-        
-        {/* Main content area - resource viewer */}
-        <div className="flex-1 overflow-hidden flex flex-col">
-          {useMDX ? (
-            <ResourceViewerMDX 
-              resource={currentResource} 
-              onAddResource={() => handleAddResource('url')}
-            />
-          ) : (
-            <ResourceViewer 
-              resource={currentResource} 
-              onAddResource={() => handleAddResource('url')}
-            />
-          )}
-        </div>
+        </div>,
+        sidebarSlot
+      )}
+
+      {/* Resource viewer — full width */}
+      <div className="flex-1 overflow-hidden flex flex-col border border-gray-200 rounded-lg shadow-sm">
+        {useMDX ? (
+          <ResourceViewerMDX
+            resource={currentResource}
+            onAddResource={() => handleAddResource('url')}
+          />
+        ) : (
+          <ResourceViewer
+            resource={currentResource}
+            onAddResource={() => handleAddResource('url')}
+          />
+        )}
       </div>
       
       {/* Modals */}

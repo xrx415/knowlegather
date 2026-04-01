@@ -1,5 +1,6 @@
 
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
     Plus,
     MessageSquare,
@@ -20,6 +21,7 @@ import {
 import { useDominiChat } from '../hooks/useDominiChat';
 import { VOICES } from '../constants';
 import { Persona, VoiceName, ChatMode } from '../types';
+import { useSidebarPortal } from '../../../contexts/SidebarPortalContext';
 
 interface DominiChatProps {
     initialContext?: string;
@@ -54,6 +56,7 @@ const DominiChat: React.FC<DominiChatProps> = ({ initialContext }) => {
         handleToggleListening,
         sendMessage,
     } = useDominiChat(initialContext);
+    const sidebarSlot = useSidebarPortal();
 
     useEffect(() => {
         const el = document.getElementById('message-container');
@@ -62,61 +65,58 @@ const DominiChat: React.FC<DominiChatProps> = ({ initialContext }) => {
 
     return (
         <div className="flex h-full bg-gray-50 text-gray-900 overflow-hidden rounded-xl border border-gray-200 shadow-inner">
-            <aside className="w-72 bg-white border-r border-gray-200 flex flex-col shadow-sm z-20">
-                <div className="p-6">
-                    <div className="flex items-center gap-3 mb-8">
-                        <div className="bg-indigo-600 p-2 rounded-xl shadow-lg shadow-indigo-200">
-                            <GraduationCap className="w-6 h-6 text-white" />
-                        </div>
-                        <h1 className="text-xl font-bold tracking-tight text-gray-800">Domini AI</h1>
-                    </div>
-                    <button
-                        onClick={() => setIsNewChatModalOpen(true)}
-                        className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 px-4 rounded-xl transition-all shadow-md active:scale-95 mb-6"
-                    >
-                        <Plus className="w-5 h-5" />
-                        Nowa Rozmowa
-                    </button>
-                    <nav className="space-y-1">
+            {/* Chat sidebar — rendered into unified sidebar via portal */}
+            {sidebarSlot && createPortal(
+                <div className="flex flex-col h-full border-t border-gray-200">
+                    <div className="p-4 shrink-0">
                         <button
-                            onClick={() => { setView('persona-config'); stopLiveSession(); }}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${view === 'persona-config' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-100'}`}
+                            onClick={() => setIsNewChatModalOpen(true)}
+                            className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-3 rounded-xl transition-all shadow-md active:scale-95 mb-4 text-sm"
                         >
-                            <Users className="w-5 h-5" />
-                            <span className="font-medium">Moje Persony</span>
+                            <Plus className="w-4 h-4" />
+                            Nowa Rozmowa
                         </button>
-                    </nav>
-                </div>
-                <div className="flex-1 overflow-y-auto px-4 pb-4">
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-2 mb-3">Ostatnie Czaty</p>
-                    <div className="space-y-1">
-                        {conversations.map(conv => {
-                            const p = personas.find(pers => pers.id === conv.personaId);
-                            return (
-                                <button
-                                    key={conv.id}
-                                    onClick={() => {
-                                        setActiveConversationId(conv.id);
-                                        setView('chat');
-                                        stopLiveSession();
-                                    }}
-                                    className={`w-full text-left px-4 py-3 rounded-xl transition-all truncate group flex items-center gap-3 ${activeConversationId === conv.id && view === 'chat' ? 'bg-white border border-gray-200 shadow-sm text-indigo-700 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
-                                >
-                                    <MessageSquare className="w-4 h-4 flex-shrink-0" />
-                                    <span className="flex-1 truncate">{p ? `${p.firstName} i Ty` : 'Usunięta Persona'}</span>
-                                    <Trash2
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            // Handle delete conversation logic if needed, or just use the hook's state
-                                        }}
-                                        className="w-4 h-4 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                                    />
-                                </button>
-                            );
-                        })}
+                        <nav className="space-y-1">
+                            <button
+                                onClick={() => { setView('persona-config'); stopLiveSession(); }}
+                                className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm ${view === 'persona-config' ? 'bg-indigo-50 text-indigo-700' : 'text-gray-600 hover:bg-gray-100'}`}
+                            >
+                                <Users className="w-4 h-4" />
+                                <span className="font-medium">Moje Persony</span>
+                            </button>
+                        </nav>
                     </div>
-                </div>
-            </aside>
+                    <div className="flex-1 overflow-y-auto px-3 pb-3">
+                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-2 mb-2">Ostatnie Czaty</p>
+                        <div className="space-y-1">
+                            {conversations.map(conv => {
+                                const p = personas.find(pers => pers.id === conv.personaId);
+                                return (
+                                    <button
+                                        key={conv.id}
+                                        onClick={() => {
+                                            setActiveConversationId(conv.id);
+                                            setView('chat');
+                                            stopLiveSession();
+                                        }}
+                                        className={`w-full text-left px-3 py-2 rounded-lg transition-all truncate group flex items-center gap-2 text-sm ${activeConversationId === conv.id && view === 'chat' ? 'bg-white border border-gray-200 shadow-sm text-indigo-700 font-medium' : 'text-gray-600 hover:bg-gray-100'}`}
+                                    >
+                                        <MessageSquare className="w-3.5 h-3.5 flex-shrink-0" />
+                                        <span className="flex-1 truncate">{p ? `${p.firstName} i Ty` : 'Usunięta Persona'}</span>
+                                        <Trash2
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                            }}
+                                            className="w-3.5 h-3.5 text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        />
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>,
+                sidebarSlot
+            )}
 
             <main className="flex-1 flex flex-col min-w-0 bg-white relative">
                 {view === 'persona-config' && (
