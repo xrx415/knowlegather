@@ -9,7 +9,7 @@ const AuthLayout = () => {
           <div className="rounded-full bg-primary-100 p-3 mb-4">
             <BookOpen className="h-8 w-8 text-primary-600" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Knowlegathor</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Knowlegather</h1>
           <p className="text-gray-500 text-center mt-2">
             Twój osobisty asystent do gromadzenia i organizowania wiedzy
           </p>

@@ -29,7 +29,7 @@ const HomePage = () => {
             Gromadź, Organizuj i Transformuj Wiedzę
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-primary-100">
-            Knowlegathor to narzędzie stworzone dla programistów i studentów, 
+            Knowlegather to narzędzie stworzone dla programistów i studentów, 
             które pozwala na efektywne gromadzenie i organizowanie wiedzy z różnych źródeł internetowych.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -121,7 +121,7 @@ const HomePage = () => {
             Gotów do uporządkowania swojej wiedzy?
           </h2>
           <p className="text-xl mb-8 text-gray-600">
-            Dołącz już dziś i odkryj, jak Knowlegathor może usprawnić Twój proces nauki i rozwoju.
+            Dołącz już dziś i odkryj, jak Knowlegather może usprawnić Twój proces nauki i rozwoju.  
           </p>
           <Button
             size="lg"

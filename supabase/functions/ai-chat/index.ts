@@ -45,8 +45,8 @@ serve(async (req) => {
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${apiKey}`,
-        "HTTP-Referer": "https://knowlegathor.com",
-        "X-Title": "Knowlegathor"
+        "HTTP-Referer": "https://knowlegather.ai",
+        "X-Title": "Knowlegather"
       },
       body: JSON.stringify({
         model: "anthropic/claude-3-haiku:beta",
