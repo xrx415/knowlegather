@@ -5,7 +5,7 @@ import { useCollectionsStore, Collection } from '../../stores/collectionsStore';
 import { fetchCollections } from '../../lib/supabase';
 import Button from '../../components/ui/Button';
 import CollectionCard from '../../components/collections/CollectionCard';
-import AiChat from '../../components/ai/AiChat';
+
 import Input from '../../components/ui/Input';
 import CreateCollectionModal from './modals/CreateCollectionModal';
 import FilterModal, { FilterOptions } from './modals/FilterModal';
@@ -173,8 +173,6 @@ const CollectionsPage = () => {
         initialFilters={filters}
       />
       
-      {/* AI Chat */}
-      <AiChat />
     </div>
   );
 };

@@ -3,6 +3,6 @@ import AiChat from './AiChat';
 
 test('renders AiChat component', () => {
   const { getByText } = render(<AiChat />);
-  const linkElement = getByText(/Start chatting/i);
-  expect(linkElement).toBeInTheDocument();
+  const headerElement = getByText(/Asystent AI/i);
+  expect(headerElement).toBeInTheDocument();
 });

@@ -25,7 +25,7 @@ import {
 } from '../../lib/supabase';
 import Button from '../../components/ui/Button';
 import ResourceItem from '../../components/resources/ResourceItem';
-import AiChat from '../../components/ai/AiChat';
+
 import AddResourceModal from './modals/AddResourceModal';
 import EditCollectionModal from './modals/EditCollectionModal';
 import ConfirmationModal from '../../components/ui/ConfirmationModal';
@@ -327,8 +327,6 @@ const CollectionDetailPage = () => {
         confirmVariant="danger"
       />
       
-      {/* AI Chat */}
-      <AiChat collection={currentCollection} currentResource={currentResource} />
     </div>
   );
 };

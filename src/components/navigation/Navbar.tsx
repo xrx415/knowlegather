@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { 
-  BookOpen, 
-  Menu, 
-  X, 
-  User, 
-  LogOut, 
+import {
+  BookOpen,
+  Menu,
+  X,
+  User,
+  LogOut,
   ChevronDown,
-  Terminal
+  Terminal,
+  Bot
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { supabase } from '../../lib/supabase';
@@ -15,9 +16,10 @@ import LogViewer from '../ui/LogViewer';
 
 interface NavbarProps {
   onToggleSidebar: () => void;
+  onToggleChat: () => void;
 }
 
-const Navbar = ({ onToggleSidebar }: NavbarProps) => {
+const Navbar = ({ onToggleSidebar, onToggleChat }: NavbarProps) => {
   const navigate = useNavigate();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [isLogViewerOpen, setIsLogViewerOpen] = useState(false);
@@ -34,9 +36,9 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
       <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
         <div className="px-4 h-16 flex items-center justify-between">
           <div className="flex items-center">
-            <button 
+            <button
               onClick={onToggleSidebar}
-              className="mr-2 p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="mr-2 p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 hidden md:block"
               aria-label="Toggle sidebar"
             >
               <Menu size={20} />
@@ -49,6 +51,15 @@ const Navbar = ({ onToggleSidebar }: NavbarProps) => {
           </div>
           
           <div className="flex items-center space-x-2">
+            {/* AI Chat Toggle (desktop only) */}
+            <button
+              onClick={onToggleChat}
+              className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 hidden md:block"
+              title="Asystent AI"
+            >
+              <Bot size={20} className="text-gray-600" />
+            </button>
+
             {/* Log Viewer Button */}
             <button
               onClick={() => setIsLogViewerOpen(true)}

@@ -1,7 +1,8 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Navbar from '../components/navigation/Navbar';
+import AiChat from '../components/ai/AiChat';
 import { useState, useEffect } from 'react';
-import { Home, FolderOpen, User, MessageSquare } from 'lucide-react';
+import { Home, FolderOpen, User, MessageSquare, Menu, Bot, Settings } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { SidebarPortalProvider } from '../contexts/SidebarPortalContext';
 
@@ -16,22 +17,28 @@ const navigationItems = [
 
 const MainLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const [sidebarSlot, setSidebarSlot] = useState<HTMLDivElement | null>(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (window.innerWidth < MD_BREAKPOINT) {
       setSidebarOpen(false);
+      setChatOpen(false);
     }
   }, [location.pathname]);
 
   return (
     <SidebarPortalProvider value={sidebarSlot}>
       <div className="flex flex-col min-h-screen">
-        <Navbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+        <Navbar
+          onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+          onToggleChat={() => setChatOpen(!chatOpen)}
+        />
 
-        <div className="flex flex-1 overflow-hidden">
-          {/* Mobile backdrop */}
+        <div className="flex flex-1 overflow-hidden pb-14 md:pb-0">
+          {/* Mobile backdrop — left sidebar */}
           {sidebarOpen && (
             <div
               className="fixed inset-0 top-16 bg-black/40 z-20 md:hidden"
@@ -39,20 +46,27 @@ const MainLayout = () => {
             />
           )}
 
-          {/* Unified sidebar — top: main nav, bottom: contextual portal slot */}
+          {/* Mobile backdrop — chat panel */}
+          {chatOpen && (
+            <div
+              className="fixed inset-0 top-16 bg-black/40 z-20 md:hidden"
+              onClick={() => setChatOpen(false)}
+            />
+          )}
+
+          {/* Left sidebar — nav + portal slot */}
           <aside
             className={`
               bg-white border-r border-gray-200 overflow-hidden
-              fixed top-16 bottom-0 left-0 z-30 w-64
+              fixed top-16 bottom-14 left-0 z-30 w-64
               transition-transform duration-300 ease-in-out
               ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-              md:static md:z-0 md:translate-x-0
+              md:bottom-0 md:static md:z-0 md:translate-x-0
               md:transition-[width] md:duration-300 md:shrink-0
               ${sidebarOpen ? 'md:w-64' : 'md:w-0'}
             `}
           >
             <div className="w-64 flex flex-col h-full">
-              {/* Top: main navigation (always the same) */}
               <div className="p-4 shrink-0">
                 <nav className="space-y-1">
                   {navigationItems.map((item) => {
@@ -80,18 +94,77 @@ const MainLayout = () => {
                 </nav>
               </div>
 
-              {/* Bottom: contextual panel — pages inject content here via portal */}
               <div ref={setSidebarSlot} className="flex-1 flex flex-col overflow-hidden" />
             </div>
           </aside>
 
-          {/* Main content area */}
+          {/* Main content */}
           <main className="flex-1 flex flex-col overflow-hidden">
             <div className="flex-1 overflow-auto p-4">
               <Outlet />
             </div>
           </main>
+
+          {/* Right sidebar — AI Chat */}
+          <aside
+            className={`
+              bg-white border-l border-gray-200 overflow-hidden
+              fixed top-16 bottom-14 right-0 z-30 w-80
+              transition-transform duration-300 ease-in-out
+              ${chatOpen ? 'translate-x-0' : 'translate-x-full'}
+              md:bottom-0 md:static md:z-0 md:translate-x-0
+              md:transition-[width] md:duration-300 md:shrink-0
+              ${chatOpen ? 'md:w-80' : 'md:w-0'}
+            `}
+          >
+            <div className="w-80 h-full">
+              <AiChat />
+            </div>
+          </aside>
         </div>
+
+        {/* Mobile bottom navigation — icons only */}
+        <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 md:hidden">
+          <div className="flex items-center justify-around h-14">
+            <button
+              onClick={() => {
+                setChatOpen(false);
+                setSidebarOpen(!sidebarOpen);
+              }}
+              className={`flex items-center justify-center w-full h-full transition-colors ${
+                sidebarOpen ? 'text-primary-600' : 'text-gray-500'
+              }`}
+              aria-label="Menu"
+            >
+              <Menu size={22} />
+            </button>
+            <button
+              onClick={() => {
+                setSidebarOpen(false);
+                setChatOpen(!chatOpen);
+              }}
+              className={`flex items-center justify-center w-full h-full transition-colors ${
+                chatOpen ? 'text-primary-600' : 'text-gray-500'
+              }`}
+              aria-label="Chat"
+            >
+              <Bot size={22} />
+            </button>
+            <button
+              onClick={() => {
+                setSidebarOpen(false);
+                setChatOpen(false);
+                navigate('/profile');
+              }}
+              className={`flex items-center justify-center w-full h-full transition-colors ${
+                location.pathname === '/profile' ? 'text-primary-600' : 'text-gray-500'
+              }`}
+              aria-label="Settings"
+            >
+              <Settings size={22} />
+            </button>
+          </div>
+        </nav>
       </div>
     </SidebarPortalProvider>
   );
