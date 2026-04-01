@@ -7,8 +7,7 @@ import {
   User,
   LogOut,
   ChevronDown,
-  Terminal,
-  Bot
+  Terminal
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
 import { supabase } from '../../lib/supabase';
@@ -16,10 +15,9 @@ import LogViewer from '../ui/LogViewer';
 
 interface NavbarProps {
   onToggleSidebar: () => void;
-  onToggleChat: () => void;
 }
 
-const Navbar = ({ onToggleSidebar, onToggleChat }: NavbarProps) => {
+const Navbar = ({ onToggleSidebar }: NavbarProps) => {
   const navigate = useNavigate();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [isLogViewerOpen, setIsLogViewerOpen] = useState(false);
@@ -51,15 +49,6 @@ const Navbar = ({ onToggleSidebar, onToggleChat }: NavbarProps) => {
           </div>
           
           <div className="flex items-center space-x-2">
-            {/* AI Chat Toggle (desktop only) */}
-            <button
-              onClick={onToggleChat}
-              className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500 hidden md:block"
-              title="Asystent AI"
-            >
-              <Bot size={20} className="text-gray-600" />
-            </button>
-
             {/* Log Viewer Button */}
             <button
               onClick={() => setIsLogViewerOpen(true)}
