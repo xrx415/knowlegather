@@ -26,11 +26,11 @@ const HomePage = () => {
       <section className="bg-gradient-to-br from-primary-700 to-primary-900 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Gromadź, Organizuj i Transformuj Wiedzę
+            Gather, Acquire and Share your knowledge with most advanced AI capabilities
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-primary-100">
-            Knowlegather to narzędzie stworzone dla programistów i studentów, 
-            które pozwala na efektywne gromadzenie i organizowanie wiedzy z różnych źródeł internetowych.
+            Knowlegather is a tool created for everyone who wants to improve their knowledge gathering skills. 
+            It allows you to effectively acquire knowledge from various sources and transform it into your own unique perspective to be shared with others. 
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

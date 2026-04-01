@@ -1,6 +1,7 @@
-# Knowlegathor
+# knowlegather
+Gather, Acquire and Share your knowledge with most advanced AI capabilities
 
-Aplikacja do gromadzenia i organizowania wiedzy.
+> Knowlegather is a tool created for everyone who wants to improve their knowledge gathering skills. It allows you to effectively acquire knowledge from various sources and transform it into your own unique perspective to be shared with others.
 
 ## Wymagania
 
@@ -10,22 +11,26 @@ Aplikacja do gromadzenia i organizowania wiedzy.
 ## Instalacja
 
 1. Sklonuj repozytorium:
+
 ```bash
 git clone https://github.com/xrx415/knowlegather.git
 cd knowlegather
 ```
 
 2. Zainstaluj zależności:
+
 ```bash
 npm install
 ```
 
 3. Skopiuj `.env.example` do `.env` i uzupełnij zmienne środowiskowe:
+
 ```bash
 cp .env.example .env
 ```
 
 4. Uruchom aplikację:
+
 ```bash
 npm run dev
 ```
@@ -41,14 +46,17 @@ npm run dev
 ### Useful commands
 
 #### Run Local Build Vite + Supabase
+
 ```bash
 npx supabase start && docker-compose up
 ```
 
 #### Full Restart Command (for local development)
+
 ```bash
 docker-compose down && npx supabase stop && npx supabase start && docker-compose up
 ```
 
 ### Usefull Links:
+
 http://localhost:54327/dashboard
