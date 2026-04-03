@@ -35,3 +35,7 @@ supabase.exe
 supabase_cli.tar.gz
 *.exe
 *.tar.gz
+
+
+.claude
+docs/transit
